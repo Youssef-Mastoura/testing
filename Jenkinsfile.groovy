@@ -1,35 +1,23 @@
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-      }
-    }
-
-    stage('Install dependencies') {
-      steps {
-        sh 'python3 -m venv venv'
-        sh '. venv/bin/activate && pip install -r requirements.txt'
-      }
-    }
-
-    stage('Test') {
-      steps {
-        sh '. venv/bin/activate && pytest --junitxml=reports/results.xml'
-      }
-      post {
-        always {
-          junit 'reports/results.xml'
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Youssef-Mastoura/testing.git'
+            }
         }
-      }
-    }
-  }
 
-  post {
-    always {
-      cleanWs()
+        stage('Install dependencies') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'pytest app_test.py'
+            }
+        }
     }
-  }
 }
