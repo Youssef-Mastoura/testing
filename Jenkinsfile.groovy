@@ -10,14 +10,21 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'python3 -m pip install --upgrade pip'
+                sh 'python3 -m pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'pytest app_test.py'
+                sh 'pytest test_app.py'
             }
+        }
+    }
+
+    post {
+        always {
+            junit '**/test-results.xml'
         }
     }
 }
